@@ -1,0 +1,29 @@
+body {
+width: 220px;
+font-family: Arial, sans-serif;
+padding: 10px;
+margin: 0;
+text-align: center;
+background-color: #f9f9f9;
+}
+h3 {
+color: #333;
+font-size: 14px;
+margin: 0 0 8px 0;
+}
+
+#undo {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 8px;
+  width: 100%;
+}
+
+#undo:hover {
+  background-color: #e60000;
+}
