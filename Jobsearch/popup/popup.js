@@ -20,8 +20,13 @@ if (gemtUge && parseInt(gemtUge)=== uge){
     checkbox.disabled = true;
     statusTekst.textContent = "Godt gået med at sende en ansøgning. Jeg er så stolt af dig!"
     undoKnap.style.display = "block"
+} else{
+    checkbox.checked=false;
+    checkbox.disabled=false;
+    statusTekst.textContent="";
+    undoKnap.style.display="none";
 }
-}
+} 
 
 startApp();
 
