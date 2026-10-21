@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Nyheds feed",
+  "version": "3.0",
+  "description": "Viser de seneste nyheder fra DR.dk.",
+  "host_permissions": [
+    "https://www.dr.dk/*",
+    "https://open-meteo.com/*"
+  ],
+    "action": {
+    "default_icon": "icons/icon-48.png",
+    "default_popup": "popup/popup.html"
+    },
+    "browser_specific_settings": {
+    "gecko": {
+      "id": "nyheds-feed@yourdomain.local",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
+}

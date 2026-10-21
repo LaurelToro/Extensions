@@ -1,0 +1,30 @@
+body {
+width: 350px;
+font-family: Arial, sans-serif;
+padding: 10px;
+margin: 0;
+text-align: center;
+background-color: #f9f9f9;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0; /* Fjerner browserens standard indrykning på lister */
+  margin: 0;
+}
+
+li{
+    border-bottom: 3px solid black;
+}
+
+li:last-child{
+    border-bottom: none;
+}
+li a{
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: black;
+    
+}
