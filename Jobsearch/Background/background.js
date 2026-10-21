@@ -28,7 +28,6 @@ function tjekans(){
     }
 
     
-
     if (ugeDage>=4 || ugeDage>=6){
         chrome.storage.local.get(['sendtans'], (result)=>{
             const gemtUge = result.sendtans;
