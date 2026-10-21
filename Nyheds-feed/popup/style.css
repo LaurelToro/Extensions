@@ -5,12 +5,31 @@ padding: 10px;
 margin: 0;
 text-align: center;
 background-color: #f9f9f9;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 18px;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
+
+.dr-logo {
+    height: 20px;
+    width: auto;
+    object-fit: contain;
+}
 ul {
   list-style-type: none;
-  padding: 0; /* Fjerner browserens standard indrykning på lister */
+  padding: 0;
   margin: 0;
+  width: 100%;
 }
 
 li{
@@ -27,4 +46,32 @@ li a{
     text-decoration: none;
     color: black;
     
+}
+
+.vejr-container {
+    font-family: sans-serif;
+    background-color: #f9f9f9;
+    width: 100%;       
+    max-width: 280px;   
+    margin: 10px auto;   
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.vejr-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #111;
+    text-align: center;
+}
+
+.vejr-details {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.4;
+    text-align: left;
+    display: inline-block;
 }

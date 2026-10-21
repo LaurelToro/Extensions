@@ -1,22 +1,26 @@
 {
   "manifest_version": 3,
   "name": "Nyheds feed",
-  "version": "3.0",
+  "version": "3.2",
   "description": "Viser de seneste nyheder fra DR.dk.",
   "host_permissions": [
     "https://www.dr.dk/*",
-    "https://open-meteo.com/*"
+    "https://api.open-meteo.com/*"
   ],
+
     "action": {
     "default_icon": "icons/icon-48.png",
     "default_popup": "popup/popup.html"
     },
-    "browser_specific_settings": {
+  "web_accessible_resources": [
+    {
+      "resources": ["logos/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "browser_specific_settings": {
     "gecko": {
-      "id": "nyheds-feed@yourdomain.local",
-      "data_collection_permissions": {
-        "required": ["none"]
-      }
+      "id": "nyheds-feed@yourdomain.local"
     }
   }
 }

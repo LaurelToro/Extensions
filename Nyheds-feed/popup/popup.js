@@ -6,7 +6,7 @@ async function LoadExtensionData() {
 
         const [nyhedResponse, vejrResponse] = await Promise.all([
             fetch("https://www.dr.dk/nyheder/service/feeds/senestenyt"),
-            fetch("https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m&daily=temperature_2m_max,temperature_2m_min,daylight_duration,sunshine_duration,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,snowfall_sum,precipitation_hours&forecast_days=3&models=dmi_seamless")
+            fetch("https://api.open-meteo.com/v1/forecast?latitude=55.39594&longitude=10.38831&hourly=temperature_2m,rain,snowfall&daily=sunrise,sunset,daylight_duration,sunshine_duration,precipitation_sum&forecast_days=3&models=dmi_seamless")
         ]);
 
         if (!nyhedResponse.ok || !vejrResponse.ok) {
@@ -15,40 +15,34 @@ async function LoadExtensionData() {
 
 
 const vejrData = await vejrResponse.json();
+        const TimeNu = new Date().getHours();
 
-const maxTemp = vejrData.daily.temperature_2m_max[0];
-const minTemp = vejrData.daily.temperature_2m_min[0];
-const nedboerSum = vejrData.daily.precipitation_sum[0];
-const regnSum = vejrData.daily.rain_sum[0];
-const bygerSum = vejrData.daily.showers_sum[0];
-const sneSum = vejrData.daily.snowfall_sum[0];
-const nedboerTimer = vejrData.daily.precipitation_hours[0];
-
-
-const solopgang = vejrData.daily.sunrise[0].split("T")[1];
-const solnedgang = vejrData.daily.sunset[0].split("T")[1];
-
-
-const dagslysTimer = (vejrData.daily.daylight_duration[0] / 3600).toFixed(1);
-const solskinTimer = (vejrData.daily.sunshine_duration[0] / 3600).toFixed(1);
-
-
-const nuvaerendeTime = new Date().getHours();
-const nuTemp = vejrData.hourly.temperature_2m[nuvaerendeTime] || maxTemp;
+        //TIME data, ikke dagligt
+        const temp = vejrData.hourly.temperature_2m[TimeNu];
+        const regn = vejrData.hourly.rain[TimeNu];
+        const sne = vejrData.hourly.snowfall[TimeNu];
+        //Samlede regn og sne for dagen.
+        const pers = vejrData.daily.precipitation_sum[0];
+        //Solopgang og nedgang plus timer med sollys
+        const solopgang = vejrData.daily.sunrise[0].split("T")[1];
+        const solnedgang = vejrData.daily.sunset[0].split("T")[1];
+        const dagslysTimer = (vejrData.daily.daylight_duration[0] / 3600).toFixed(1);
+        const solskinTimer = (vejrData.daily.sunshine_duration[0] / 3600).toFixed(1);
 
 if (weatherBox) {
     weatherBox.innerHTML = `
-        <div style="font-weight: bold; font-size: 15px; margin-bottom: 6px; border-bottom: 1px solid #ccc; padding-bottom: 3px;">
-             Odense: ${nuTemp}°C
-        </div>
-        <div style="font-size: 12px; color: #333; line-height: 1.5;">
-             <b>Temperatur:</b> Høj ${maxTemp}°C / Lav ${minTemp}°C<br>
-             <b>Sol:</b> Op kl. ${solopgang} / Ned kl. ${solnedgang}<br>
-             <b>Dagslys:</b> ${dagslysTimer} t (Heraf solskin: ${solskinTimer} t)<br>
-             <b>Nedbør i dag:</b> ${nedboerSum} mm (${nedboerTimer} timer)<br>
-            <span style="font-size: 11px; color: #666;">
-                (Regn: ${regnSum}mm | Byger: ${bygerSum}mm | Sne: ${sneSum}cm)
-            </span>
+        <div class="vejr-container">
+            <div class="vejr-title">
+                Odense lige nu: ${temp}°C
+            </div>
+            <div class="vejr-details">
+                <b>Regn lige nu:</b> ${regn} mm<br>
+                ${sne > 0 ? `<b>Sne lige nu:</b> \${sne} cm<br>` : ''}
+                <b>Samlet nedbør i dag:</b> ${pers} mm<br>
+                <b>Solopgang:</b> ${solopgang}<br>
+                <b>Solnedgang:</b> ${solnedgang}<br>
+                <b>Dagslys:</b> ${dagslysTimer} t (Solskin: ${solskinTimer} t)
+            </div>
         </div>
     `;
 }
