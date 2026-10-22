@@ -23,7 +23,7 @@ async function VejrBoks() {
         const dagslysTimer = (vejrData.daily.daylight_duration[0] / 3600).toFixed(1);
         const solskinTimer = (vejrData.daily.sunshine_duration[0] / 3600).toFixed(1);
 
-        // RETTET: Fjernet backslash fra \${sne}
+        
         weatherBox.innerHTML = `
             <div class="vejr-container">
                 <div class="vejr-title">

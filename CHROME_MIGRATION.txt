@@ -1,0 +1,74 @@
+Chrome Migration Checklist
+=========================
+
+Scope
+-----
+Convert Jobsearch, Nyheds-feed, and Tab-pet for Chrome. Leave Borderify alone.
+Keep separate Firefox copies if you want the original Firefox extensions to
+continue working. Make the Chrome edits in copies or in the existing folders
+only if you no longer need those folders for Firefox.
+
+1. Jobsearch
+------------
+[ ] In Jobsearch/manifest.json, remove the browser_specific_settings.gecko
+    section. Chrome does not use the Firefox extension ID or strict version.
+[ ] Replace the background.scripts entry with Chrome's service worker field:
+        "background": {
+          "service_worker": "Background/background.js"
+        }
+[ ] Keep the existing permissions: storage, notifications, and alarms.
+[ ] The background and popup already use chrome.* APIs, so no Firefox API
+    namespace conversion should be needed.
+[ ] Fix the existing popup error before testing: popup/popup.js refers to
+    ugeDage at the end of the file, but that variable is not defined there.
+    Remove or correct that block; notifications normally belong in the
+    background script, not in popup code.
+[ ] Test the checkbox, undo action, saved weekly state, notification behavior,
+    and recurring alarm in Chrome.
+
+2. Nyheds-feed
+--------------
+[ ] In Nyheds-feed/manifest.json, remove browser_specific_settings.gecko.
+[ ] Replace background.scripts with a service worker declaration and retain
+    the module type because the current background script uses modern module
+    configuration:
+        "background": {
+          "service_worker": "Background/background.js",
+          "type": "module"
+        }
+[ ] In Background/background.js, replace browser.runtime with chrome.runtime.
+[ ] In Public/popup/popup.js, replace browser.runtime, browser.tabs, and
+    browser.permissions with their chrome.* equivalents:
+    chrome.runtime, chrome.tabs, and chrome.permissions.
+[ ] Keep the Open-Meteo host permission and the optional DR host permission.
+    The DR permission request should remain attached to the user's button
+    click, as it is now.
+[ ] Test the weather fetch, RSS fetch, opening a news link, and both outcomes
+    of the DR access prompt (granted and declined). If supporting older Chrome
+    versions, check its runtime message-listener Promise support and use the
+    sendResponse/return-true pattern if needed.
+
+3. Tab-pet
+-----------
+[ ] The manifest and content script are already close to Chrome-compatible;
+    there are no Firefox browser APIs to replace.
+[ ] Load it in Chrome and grant site access when prompted. Its <all_urls>
+    content-script match means it will request broad website access.
+[ ] Test on ordinary websites. Chrome will not run extension content scripts
+    on protected pages such as chrome:// pages or the Chrome Web Store.
+[ ] Optionally rename the firefox-tab-pet element ID in pet.js and pet.css;
+    this is cosmetic and is not required for Chrome compatibility.
+
+4. Load and verify each extension
+---------------------------------
+[ ] Open chrome://extensions in Chrome and enable Developer mode.
+[ ] Choose Load unpacked and select the folder containing that extension's
+    manifest.json (Jobsearch, Nyheds-feed, or Tab-pet).
+[ ] Resolve any manifest or service-worker errors shown by Chrome. For
+    background errors, open the extension's service worker inspector from the
+    extension card and check its console.
+[ ] Exercise the relevant behavior listed above after each load. Reload the
+    extension after editing its manifest or background code.
+[ ] Before publishing, create a separate package for each extension, review
+    permissions and store listing details, and submit each through the Chrome
+    Web Store.
