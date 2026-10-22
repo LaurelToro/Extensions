@@ -50,7 +50,6 @@ async function Nyheder() {
     if (!list) return;
 
     try {
-        // Vi beder background.js om at hente RSS-feedet for os for at omgå CORS helt
         const response = await browser.runtime.sendMessage({ action: "fetchNews" });
 
         if (!response || !response.success) {
@@ -67,7 +66,6 @@ async function Nyheder() {
 
         list.innerHTML = "";
 
-        // Loop igennem de 2 nyeste artikler
         for (let i = 0; i < Math.min(items.length, 2); i++) {
             const item = items[i];
             
@@ -86,7 +84,7 @@ async function Nyheder() {
             a.textContent = titel;
             a.style.cursor = "pointer";
 
-            // Tvinger Firefox til at åbne fanebladet korrekt i browseren
+
             a.addEventListener('click', (e) => {
                 e.preventDefault();
                 browser.tabs.create({ url: link });
@@ -101,8 +99,47 @@ async function Nyheder() {
     }
 }
 
+async function setupNewsAccess() {
+    const button = document.getElementById("grant-news-access");
+    const status = document.getElementById("news-access-status");
+    const list = document.getElementById("feed");
+    if (!button || !status || !list) return;
+
+    const origin = "https://www.dr.dk/*";
+    const hasAccess = await browser.permissions.contains({ origins: [origin] });
+
+    if (hasAccess) {
+        status.textContent = "";
+        button.hidden = true;
+        Nyheder();
+        return;
+    }
+
+    list.textContent = "Giv adgang til DR.dk for at hente nyheder.";
+    status.textContent = "Nyhedsfeedet kræver adgang til DR.dk.";
+    button.hidden = false;
+    button.addEventListener("click", async () => {
+        button.disabled = true;
+        try {
+            const granted = await browser.permissions.request({ origins: [origin] });
+            if (granted) {
+                status.textContent = "";
+                button.hidden = true;
+                list.textContent = "Henter nyheder...";
+                Nyheder();
+            } else {
+                status.textContent = "Adgang blev ikke givet. Nyheder kan ikke hentes.";
+            }
+        } catch (error) {
+            status.textContent = "Kunne ikke anmode om adgang til DR.dk.";
+        } finally {
+            button.disabled = false;
+        }
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
     VejrBoks();
-    Nyheder();
+    setupNewsAccess();
 });

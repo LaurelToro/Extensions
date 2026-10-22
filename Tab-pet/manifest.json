@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "Tab Pet",
+    "version": "1",
+    "description": "Tilføjer en lille fyr i din tab",
+    "permissions":[],
+    "content_scripts":[
+        {
+            "matches":["<all_urls>"],
+            "js":["pet.js"],
+            "css":["pet.css"]
+        }
+    ]
+}
